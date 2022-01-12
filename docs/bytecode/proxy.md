@@ -26,7 +26,7 @@ java.lang.reflect.Proxy做了三个事情:
 由此可见,由于缓存,对单一接口Proxy并不会导致jvm堆空间的暴增.但在实现多个接口时,缓存无法命中,动态代理在运行期通过接口动态生成代理类。使用反射大量生成类文件可能引起Full GC造成性能影响，因为字节码文件加载后会 存放在JVM运行时区的方法区中（或持久代）。当方法区满的时候，会引起Full GC。因此当大量使用动态代理时，可以将持久代设置大一些，减少Full GC次数。
 
 Proxy的序列图
-![在这里插入图片描述](https://img-blog.csdnimg.cn/7f7d6b53d8d94a029409e9064fc30d81.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6ICB6J665Lid,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
+[在这里插入图片描述](../../out/uml/proxy/proxy/proxy.png)
 
 ProxyBuilder负责对需要生成的class类的信息的组装:
 1. 拼装代理类包名和类名，组织需要代理的方法
@@ -36,9 +36,10 @@ ProxyBuilder负责对需要生成的class类的信息的组装:
 
 
 核心类图
-![在这里插入图片描述](https://img-blog.csdnimg.cn/387f7d1915e14d24bcdb581127a8c3d3.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6ICB6J665Lid,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
+![在这里插入图片描述](../../out/uml/proxy/jdk-proxy/proxy-class.png)
 ProxyGenerator真正实现接口声明到字节码的转换,它继承了asm的ClassWriter抽象类.由于担心与其他工程同样使用ASM的应用版本冲突,JDK直接复制了ASM相关代码到新的包中.
 
+![在这里插入图片描述](../../out/uml/proxy/proxy-runtime/proxy-runtime.png)
 ## 查看生成的Class文件
 ProxyGenerator.generateProxyClass()中有这样一个逻辑：
 ```java
