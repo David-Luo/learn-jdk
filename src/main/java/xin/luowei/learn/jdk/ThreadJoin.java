@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+* 多线程
  * ThreadJoin
  */
 public class ThreadJoin {
