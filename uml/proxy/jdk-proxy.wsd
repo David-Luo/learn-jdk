@@ -1,0 +1,49 @@
+@@startuml proxy-class
+
+class Proxy{
+    ClassLoaderValue<Constructor<?>> proxyCache
+
+    + {static} Object newProxyInstance(ClassLoader loader,Class<?>[] interfaces,InvocationHandler h)
+    - {static} Constructor<?> getProxyConstructor(Class<?> caller,ClassLoader loader,Class<?>... interfaces)
+    - {static} Object newProxyInstance(Class<?> caller, Constructor<?> cons,InvocationHandler h) 
+}
+class Proxy.ProxyBuilder{
+    - Module module
+    - List<Class<?>> interfaces
+
+    # ProxyBuilder(ClassLoader loader, Class<?> intf)
+    # ProxyBuilder(ClassLoader loader, List<Class<?>> interfaces)
+    # Constructor<?> build()
+    - {static} Class<?> defineProxyClass(Module m, List<Class<?>> interfaces) 
+}
+
+Proxy ..> Proxy.ProxyBuilder
+class ProxyGenerator extends asm.ClassWriter{
+    # {static} byte[] generateProxyClass(ClassLoader loader,final String name,List<Class<?>> interfaces,int accessFlags)
+    - ProxyGenerator(ClassLoader loader, String className, List<Class<?>> interfaces,int accessFlags)
+    - byte[] generateClassFile()
+    - void addProxyMethod(ProxyMethod pm)
+    - void generateConstructor()
+    - generateStaticInitializer()
+}
+class ProxyGenerator.ProxyMethod{
+        -  Method method;
+        -  String shortSignature;
+        -  Class<?> fromClass;
+        -  Class<?>[] parameterTypes;
+        -  Class<?> returnType;
+        -  String methodFieldName;
+        - Class<?>[] exceptionTypes;
+
+        - void generateMethod(ClassWriter cw, String className)
+}
+ProxyGenerator .left.> ProxyGenerator.ProxyMethod
+Proxy.ProxyBuilder ..> ProxyGenerator
+package asm{
+class ClassWriter{
+    + void visit(int version,int access,String name,String signature,String superName,String[] interfaces)
+    + MethodVisitor visitMethod(int access,String name,String descriptor,String signature,String[] exceptions)
+    + byte[] toByteArray() 
+}
+}
+@@enduml

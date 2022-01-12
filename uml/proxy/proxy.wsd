@@ -1,0 +1,36 @@
+@@startuml proxy
+
+client-> Proxy:newProxyInstance()
+activate Proxy
+Proxy -> Proxy:getProxyConstructor
+activate Proxy
+Proxy -> Proxy:proxyCache
+Proxy -> ProxyBuilder:build
+activate ProxyBuilder
+ProxyBuilder -> ProxyBuilder:defineProxyClass
+activate ProxyBuilder
+ProxyBuilder -> ProxyGenerator:generateProxyClass
+activate ProxyGenerator
+ProxyGenerator -> ProxyGenerator:generateClassFile
+ProxyGenerator -> ProxyGenerator:visit
+ProxyGenerator -> ProxyGenerator:addProxyMethod
+ProxyGenerator -> ProxyGenerator:generateConstructor
+ProxyGenerator -> ProxyGenerator:toByteArray()
+ProxyGenerator --> ProxyBuilder:byte[]
+deactivate ProxyGenerator
+ProxyBuilder -> ClassLoader:defineClass1
+activate ClassLoader
+ClassLoader --> ProxyBuilder:Class<?>
+deactivate ClassLoader
+ProxyBuilder --> ProxyBuilder:Class<?>
+deactivate ProxyBuilder
+ProxyBuilder --> Proxy:Constructor
+deactivate ProxyBuilder
+deactivate Proxy
+Proxy -> Proxy:newProxyInstance
+Proxy -> Constructor:newInstance(new Object[]{handler})
+activate Constructor
+Constructor-->Proxy:Object
+deactivate Constructor
+Proxy --> client:Object
+@@enduml

@@ -1,0 +1,24 @@
+@@startuml proxy-runtime
+class Proxy{
+    - {static} ClassLoaderValue<Constructor<?>> proxyCache
+    # InvocationHandler h
+
+    + {static} Object newProxyInstance(ClassLoader loader,Class<?>[] interfaces,InvocationHandler h)
+    - {static} Constructor<?> getProxyConstructor(Class<?> caller,ClassLoader loader,Class<?>... interfaces)
+    - {static} Object newProxyInstance(Class<?> caller, Constructor<?> cons,InvocationHandler h) 
+}
+class $Proxy0 extends Proxy implements XxxInterface {
+    + someMethod()
+}
+interface XxxInterface{
+   + someMethod()
+}
+interface InvocationHandler {
+    + Object invoke(Object proxy, Method method, Object[] args)
+}
+Proxy ..> InvocationHandler
+
+class MyInvocationHandler implements InvocationHandler
+
+$Proxy0 .right.> MyInvocationHandler
+@@enduml
