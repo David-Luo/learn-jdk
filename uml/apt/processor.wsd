@@ -1,0 +1,34 @@
+@@startuml processor
+
+JavacTool -> Main:compile()
+Main -> JavaCompiler:compile()
+activate JavaCompiler
+JavaCompiler -> JavaCompiler:initProcessAnnotations()
+activate JavaCompiler
+JavaCompiler -> JavacProcessingEnvironment:setProcessors()
+activate JavacProcessingEnvironment
+JavacProcessingEnvironment -> JavacProcessingEnvironment:initProcessorIterator()
+JavacProcessingEnvironment --> JavaCompiler
+deactivate JavacProcessingEnvironment
+deactivate JavaCompiler
+JavaCompiler -> JavaCompiler:processAnnotations()
+activate JavaCompiler
+JavaCompiler -> JavacProcessingEnvironment:doProcessing()
+activate JavacProcessingEnvironment
+JavaCompiler -> Round:Round()
+activate Round
+JavaCompiler -> Round:run()
+Round -> JavacProcessingEnvironment:discoverAndRunProcs()
+activate JavacProcessingEnvironment
+JavacProcessingEnvironment -> JavacProcessingEnvironment:callProcessor()
+JavacProcessingEnvironment -> MappingProcessor:process()
+MappingProcessor --> JavacProcessingEnvironment:boolean
+JavacProcessingEnvironment --> Round
+deactivate Round
+deactivate JavacProcessingEnvironment
+JavacProcessingEnvironment --> JavaCompiler:boolean
+deactivate JavacProcessingEnvironment
+deactivate JavaCompiler
+JavaCompiler --> Main
+deactivate JavaCompiler
+@@enduml

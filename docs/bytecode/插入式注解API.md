@@ -9,26 +9,27 @@
 
 Javac编译动作的入口是com.sun.tools.javac.main.JavaCompiler类，上述3个过程的代码逻辑集中在这个类的compile()和compile2()方法中。在JavaCompiler源码中，插入式注解处理器的初始化过程是在initPorcessAnnotations()方法中完成的，而它的执行过程则是在processAnnotations()方法中完成的，这个方法判断是否还有新的注解处理器需要执行，如果有的话，通过com.sun.tools.javac.processing.JavacProcessingEnvironment类的doProcessing()方法生成一个新的JavaCompiler对象对编译的后续步骤进行处理。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/c99d250aa37140abbc9e4fcf459a5636.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6ICB6J665Lid,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
+
 当编译器以默认的编译参数编译时，它会执行以下步骤：
 
-1.1. Parse： 读入一堆*.java源代码，并且把读进来的符号（Token）映射到AST节点上去。
-1.2. Enter: 把类的定义放到符号表（Symbol Table）中去。
-2. Process annotations: 可选的。处理编译单元（compilation units）里面所找到的标记（annotation）。
-3.1. Attribute: 为AST添加属性。这一步包含名字解析(name resolution)，类型检测(type checking)和常数折叠(constant fold)。
-3.2. Flow: 为前面得到的AST执行流分析（Flow analysis）操作。这个步骤包含赋值(assignment)的检查和可执行性(reachability)的检查。
-3.3. Desugar: 重写AST， 并且把一些复杂的语法转化成一般的语法。
-3.4. Generate: 生成源文件或者类文件。
-
+- 1.1. Parse： 读入一堆*.java源代码，并且把读进来的符号（Token）映射到AST节点上去。
+- 1.2. Enter: 把类的定义放到符号表（Symbol Table）中去。
+- 2. Process annotations: 可选的。处理编译单元（compilation units）里面所找到的标记（annotation）。
+- 3.1. Attribute: 为AST添加属性。这一步包含名字解析(name resolution)，类型检测(type checking)和常数折叠(constant fold)。
+- 3.2. Flow: 为前面得到的AST执行流分析（Flow analysis）操作。这个步骤包含赋值(assignment)的检查和可执行性(reachability)的检查。
+- 3.3. Desugar: 重写AST， 并且把一些复杂的语法转化成一般的语法。
+- 3.4. Generate: 生成源文件或者类文件。
 
 注解处理器主要有三个用途。
+
 - 一是定义编译规则，并检查被编译的源文件。
 - 二是修改已有源代码。
 - 三是生成新的源代码。
 
 其中，第二种涉及了 Java 编译器的内部 API，因此并不推荐。第三种较为常见，是 OpenJDK 工具 jcstress，以及 JMH 生成测试代码的方式。
 
-
 # 编写插入式处理器
+
 编写插入式注解处理器，要点如下：
 
 - 重写init方法，获取一些必要的构建对象
