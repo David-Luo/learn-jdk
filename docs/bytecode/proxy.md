@@ -26,7 +26,7 @@ java.lang.reflect.Proxy做了三个事情:
 由此可见,由于缓存,对单一接口Proxy并不会导致jvm堆空间的暴增.但在实现多个接口时,缓存无法命中,动态代理在运行期通过接口动态生成代理类。使用反射大量生成类文件可能引起Full GC造成性能影响，因为字节码文件加载后会 存放在JVM运行时区的方法区中（或持久代）。当方法区满的时候，会引起Full GC。因此当大量使用动态代理时，可以将持久代设置大一些，减少Full GC次数。
 
 Proxy的序列图
-[在这里插入图片描述](../imgs/out/uml/proxy/proxy/proxy.png)
+[在这里插入图片描述](../imgs/out/uml/proxy/proxy/proxy-seq.png)
 
 ProxyBuilder负责对需要生成的class类的信息的组装:
 1. 拼装代理类包名和类名，组织需要代理的方法
