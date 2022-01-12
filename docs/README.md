@@ -1,3 +1,3 @@
 # 学习文档
 
-![JDK代理](bytecode/proxy.md)
+1. [JDK代理](bytecode/proxy.md)
