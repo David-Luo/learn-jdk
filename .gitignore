@@ -32,3 +32,6 @@ out/
 .vscode/
 bin/
 .attach_pid*
+
+.DS_Store/
+.DS_Store

@@ -1,4 +1,4 @@
-package xin.luowei.learn.jdk;
+package xin.luowei.learn.jdk.system;
 
 public class VolatileDemo {
 

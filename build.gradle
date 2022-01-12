@@ -25,10 +25,14 @@ dependencies {
     implementation 'com.google.guava:guava:28.0-jre'
 
     // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
 
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    // mapstruct runtime
+    implementation 'org.mapstruct:mapstruct:1.4.1.Final'
+    // mapstruct compile time
+    implementation 'org.mapstruct:mapstruct-processor:1.4.1.Final'
 }
 
 application {

@@ -1,4 +1,4 @@
-package xin.luowei.learn.jdk;
+package xin.luowei.learn.jdk.thread;
 
 import java.util.LinkedList;
 import java.util.List;
