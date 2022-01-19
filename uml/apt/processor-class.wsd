@@ -43,7 +43,5 @@ interface Elements{
     List<? extends Element> getAllMembers(TypeElement type)
 }
 
-interface Types{
 
-}
 @@enduml

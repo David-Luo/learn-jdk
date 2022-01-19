@@ -12,7 +12,7 @@ g) Generate: 生成源文件或者类文件。
 具体而言:
 1 Parse
 作为第一步，词法分析器（lexical analyzer）把输入的字符流（character sequence）映射成一个符号流(token sequence)。然后Parser再把生成的符号流映射成一个抽象语法树（AST）
-
+由接口com.sun.tools.javac.parser.Parser定义.
 2 Enter
 在这个步骤中，编译器会找到当前范围（enclosing scope）中发现的所有的定义(definitions)，并且把这些定义注册成符号（symbols）。Enter这个步骤又分为以下两个阶段：
 
@@ -22,9 +22,11 @@ g) Generate: 生成源文件或者类文件。
 
 最后，enter把所有的顶层类（top-level classes）放到一个todo-queue中，
 
+由类com.sun.tools.javac.comp.Enter实现,实际是由JCTree.Visitor定义.
+
 3 Process Annotations
 如果存在标记处理器，并且编译参数里面指定要处理标记，那么这个过程就会处理在某个编译单元里面的标记。JSR269定义了一个接口，可以用来写这种Annotation处理插件。然而，这个接口的功能非常有限，并且不能用Collective Behavior扩展这种语言。主要的限制是JSR269不提供子方法的反射调用。
-
+由接口javax.annotation.processing.Processor定义.
 4 Attribute
 为Enter阶段生成的所有AST添加属性。应当注意，Attribte可能会需要额外的文件被解析（Parse），通过SourceCompleter加入到符号表中。
 
@@ -38,11 +40,16 @@ l ConstFold: 这是参数折叠类。常数折叠用于简化在编译时的常�
 
 l Infer：类参数引用的类。
 
+由类com.sun.tools.javac.comp.Attr实现,实际是由JCTree.Visitor定义.
+
 5 Flow
 这个阶段会对添加属性后的类，执行数据流的检查。存活性分析（liveness analysis） 检查是否每个语句都可以被执行到。异常分析（Excepetion analysis） 检查是豆每个被抛出的异常都是声明过的，并且这些异常是否都会被捕获。确定行赋值（definite assignment）分析保证每个变量在使用时已经被赋值。而确定性不赋值（definite unassignment）分析保证final变量不会被多次赋值。
-
+由类com.sun.tools.javac.comp.Flow实现.
 6 Desugar
 除去多余的语法，像内部类，类的常数，assertion断言语句，foreach循环等。
+由各种com.sun.tools.javac.comp.TreeTranslator的实现类实现通过的功能.
 
 7  Generate
 这是最终的阶段。这个阶段生成许多源文件或者类文件。到底是生成源文件还是类文件取决于编译选项。
+
+由com.sun.tools.javac.jvm.ClassWriter实现.
