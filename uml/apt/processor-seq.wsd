@@ -1,4 +1,4 @@
-@@startuml processor
+@@startuml processor-seq
 
 JavacTool -> Main:compile()
 Main -> JavaCompiler:compile()
