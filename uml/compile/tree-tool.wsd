@@ -1,0 +1,13 @@
+@@startuml tree-tool
+class TreeTranslator extends JCTree.Visitor
+class TreeMaker implements JCTree.Factory
+
+interface Parser {
+    JCCompilationUnit parseCompilationUnit()
+    JCExpression parseExpression()
+    JCStatement parseStatement()
+    JCExpression parseType()
+}
+class JavacParser implements Parser
+class ReplParser extends JavacParser
+@@enduml

@@ -10,15 +10,20 @@
 Javac编译动作的入口是com.sun.tools.javac.main.JavaCompiler类，上述3个过程的代码逻辑集中在这个类的compile()和compile2()方法中。在JavaCompiler源码中，插入式注解处理器的初始化过程是在initPorcessAnnotations()方法中完成的，而它的执行过程则是在processAnnotations()方法中完成的，这个方法判断是否还有新的注解处理器需要执行，如果有的话，通过com.sun.tools.javac.processing.JavacProcessingEnvironment类的doProcessing()方法生成一个新的JavaCompiler对象对编译的后续步骤进行处理。
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/c99d250aa37140abbc9e4fcf459a5636.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA6ICB6J665Lid,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center)
 
-当编译器以默认的编译参数编译时，它会执行以下步骤：
 
-- 1.1. Parse： 读入一堆*.java源代码，并且把读进来的符号（Token）映射到AST节点上去。
-- 1.2. Enter: 把类的定义放到符号表（Symbol Table）中去。
-- 2. Process annotations: 可选的。处理编译单元（compilation units）里面所找到的标记（annotation）。
-- 3.1. Attribute: 为AST添加属性。这一步包含名字解析(name resolution)，类型检测(type checking)和常数折叠(constant fold)。
-- 3.2. Flow: 为前面得到的AST执行流分析（Flow analysis）操作。这个步骤包含赋值(assignment)的检查和可执行性(reachability)的检查。
-- 3.3. Desugar: 重写AST， 并且把一些复杂的语法转化成一般的语法。
-- 3.4. Generate: 生成源文件或者类文件。
+标记处理可能会发生很多轮。每一轮处理器只处理特定的一些标记，并且生成的源文件或者类文件，交给下一轮来处理。如果处理器被要求只处理特定的某一轮，那么他也会处理后续的那些次，包括最后一轮，就算最后一轮没有可以处理的标记。处理器可能也会去处理被这个工具生成的文件。
+
+后一个方法处理前一轮生成的标记类型，并且返回是否这些标记会声明。如果返回是True，那么后续的处理器就不会去处理它们。如果返回是false，那么后续处理器会继续处理它们。一个处理器可能总是返回同样的逻辑值，或者是根据选项改变结果。
+
+```java
+ public synchronized void init(ProcessingEnvironment processingEnv)
+
+ public boolean process(Set<? extends TypeElement> annotations,RoundEnvironment roundEnv)
+```
+这两个方法都是在标记处理过程中被java编译器调用的。第一个方法用来初始化插件，只被调用一次。而第二个方法每一轮标记处理都会被调用，并且在所有处理都结束后还会调用一次。
+
+如何把标记处理器注册成服务
+Java提供了一个注册服务的机制。如果一个标记处理器被注册成了一个服务，编译器就会自动的去找到这个标记处理器。注册的方法是，在classpath中找到一个叫META-INF/services的文件夹，然后放入一个javax.annotation.processing.Processor的文件。文件格式是很明显的，就是要包含要注册的标记处理器的完整名称。每个名字都要占单独的一行。
 
 注解处理器主要有三个用途。
 
@@ -118,7 +123,27 @@ int compilationResult = compiler.run(null, null, null, ops);
 // javac -cp /CLASSPATH/TO/CheckGetterProcessor -processor bar.CheckGetterProcessor Foo.java
 ```
 
+Pluggable Annotation Processing API建立了Java 语言本身的一个模型,它把method、package、constructor、type、variable、enum、annotation等Java语言元素映射为Types和Elements，从而将Java语言的语义映射成为对象，我们可以在javax.lang.model包下面可以看到这些类。
+在APT里面，Java源代码会被解释称类似XML的结构，比如类，字段，方法，方法的参数等都会被解释称一个元素，每个元素都是Element的实例
+
+插件化注解处理API的使用步骤大概如下：
+
+
+1、自定义一个Annotation Processor，需要继承​​javax.annotation.processing.AbstractProcessor​​，并覆写process方法。
+2、自定义一个注解，注解的元注解需要指定​​@Retention(RetentionPolicy.SOURCE)​​。
+3、需要在声明的自定义Annotation Processor中使用​​javax.annotation.processing.SupportedAnnotationTypes​​指定在第2步创建的注解类型的名称(注意需要全类名，"包名.注解类型名称"，否则会不生效)。
+4、需要在声明的自定义Annotation Processor中使用​​javax.annotation.processing.SupportedSourceVersion​​指定编译版本。
+5、可选操作，可以通在声明的自定义Annotation Processor中使用​​javax.annotation.processing.SupportedOptions​​指定编译参数。
+
+接着需要指定Processor，如果使用IDEA的话，Compiler->Annotation Processors中的Enable annotation processing必须勾选。然后可以通过下面几种方式指定指定Processor。
+
+
+1、直接使用编译参数指定，例如：javac -processor club.throwable.processor.AnnotationProcessor Main.java。
+2、通过服务注册指定，就是META-INF/services/javax.annotation.processing.Processor文件中添加club.throwable.processor.AnnotationProcessor。
+3、通过Maven的编译插件的配置指定
+
 # 参考文献
 1. [Java-JSR-269-插入式注解处理器](https://liuyehcf.github.io/2018/02/02/Java-JSR-269-%E6%8F%92%E5%85%A5%E5%BC%8F%E6%B3%A8%E8%A7%A3%E5%A4%84%E7%90%86%E5%99%A8/)
 2. [Lombok原理分析与功能实现](https://blog.mythsman.com/post/5d2c11c767f841464434a3bf/)
 3. [深入拆解 Java 虚拟机-注解处理器](https://time.geekbang.org/column/article/40189)
+4. [自定义APT之：调试](https://blog.csdn.net/wengliuhu/article/details/113920085)

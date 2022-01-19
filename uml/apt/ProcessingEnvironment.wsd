@@ -1,0 +1,27 @@
+@@startuml pe-class
+class JavacProcessingEnvironment implements ProcessingEnvironment
+interface ProcessingEnvironment{
+    Map<String,String> getOptions()
+    Messager getMessager()
+    Filer getFiler()
+    Elements getElementUtils()
+    Types getTypeUtils()
+}
+ProcessingEnvironment ..> Filer
+ProcessingEnvironment ..> Elements
+ProcessingEnvironment ..> Types
+
+interface Filer{
+    + JavaFileObject createSourceFile(CharSequence name,Element... originatingElements)
+}
+class JavacFiler implements Filer{
+
+}
+Filer ..> JavaFileObject
+interface JavaFileObject
+interface Elements
+interface Types
+class JavacElements implements Elements
+class JavacTypes implements Types
+
+@@enduml

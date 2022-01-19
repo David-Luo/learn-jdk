@@ -1,0 +1,29 @@
+@@startuml javaCompile
+
+class JavaCompiler{
+    + void initProcessAnnotations(Iterable<? extends Processor> processors,Collection<? extends JavaFileObject> initialFiles,Collection<String> initialClassNames)
+    + List<JCCompilationUnit> parseFiles(Iterable<JavaFileObject> fileObjects)
+    + List<JCCompilationUnit> initModules(List<JCCompilationUnit> roots)
+    + List<JCCompilationUnit> enterTrees(List<JCCompilationUnit> roots)
+    + void processAnnotations(List<JCCompilationUnit> roots,Collection<String> classnames)
+    + Queue<Env<AttrContext>> attribute(Queue<Env<AttrContext>> envs)
+    + Queue<Env<AttrContext>> flow(Queue<Env<AttrContext>> envs)
+    + Queue<Pair<Env<AttrContext>, JCClassDecl>> desugar(Queue<Env<AttrContext>> envs)
+    + void generate(Queue<Pair<Env<AttrContext>, JCClassDecl>> queue)
+    
+    # List<T> stopIfError(CompileState cs, List<T> list)
+}
+enum CompileState {
+        INIT(0),
+        PARSE(1),
+        ENTER(2),
+        PROCESS(3),
+        ATTR(4),
+        FLOW(5),
+        TRANSTYPES(6),
+        TRANSPATTERNS(7),
+        UNLAMBDA(8),
+        LOWER(9),
+        GENERATE(10);
+}
+@@enduml

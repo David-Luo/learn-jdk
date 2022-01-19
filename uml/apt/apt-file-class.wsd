@@ -1,0 +1,42 @@
+@@startuml apt-file-class
+interface JavaFileObject extends FileObject{
+    
+}
+class FilerOutputJavaFileObject extends FilerOutputFileObject implements JavaFileObject{
+    
+}
+
+
+
+class FilerOutputFileObject extends ForwardingFileObject{
+
+}
+class ForwardingFileObject implements FileObject
+
+'class ForwardingJavaFileObject<F extends JavaFileObject> extends ForwardingFileObject implements JavaFileObject
+class FilerInputFileObject extends ForwardingFileObject
+class FilerInputJavaFileObject extends FilerInputFileObject implements JavaFileObject
+class FilerOutputStream extends FilterOutputStream
+class FilerWriter extends FilterWriter
+abstract class FilterWriter extends Writer
+class JavacFiler implements Filer{
+      - void closeFileObject(ModuleSymbol mod, String typeName, FileObject fileObject)
+}
+
+
+interface JavaFileManager{
+       + FileObject getFileForInput(Location location,String packageName,String relativeName)
+       + FileObject getFileForOutput(Location location,String packageName,String relativeName,FileObject sibling)
+       + JavaFileObject getJavaFileForInput(Location location,String className,Kind kind)
+       + JavaFileObject getJavaFileForOutput(Location location,String className,Kind kind,FileObject sibling)
+       + Location getLocationForModule(Location location, JavaFileObject fo)
+       + Location getLocationForModule(Location location, String moduleName)
+       + Iterable<JavaFileObject> list(Location location,String packageName,Set<Kind> kinds,boolean recurse)
+}
+
+JavaFileManager ..> JavaFileObject
+interface StandardJavaFileManager extends JavaFileManager{
+
+}
+
+@@enduml

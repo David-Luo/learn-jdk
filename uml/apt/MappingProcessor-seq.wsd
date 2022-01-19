@@ -1,0 +1,7 @@
+@@startuml mp-seq
+JavacProcessingEnvironment -> MappingProcessor:process()
+MappingProcessor -> MappingProcessor:processMapperElements()
+MappingProcessor -> MappingProcessor:processMapperTypeElement()
+MappingProcessor -> MapperCreationProcessor:process()
+
+@@enduml

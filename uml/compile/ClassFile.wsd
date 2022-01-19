@@ -1,0 +1,6 @@
+@@startuml ClassFile
+class ClassWriter extends ClassFile{
+    + JavaFileObject writeClass(ClassSymbol c)
+}
+class ClassReader{}
+@@enduml

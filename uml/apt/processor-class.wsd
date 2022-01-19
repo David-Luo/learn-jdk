@@ -1,0 +1,49 @@
+@@startuml processor-class
+interface Processor{
+    Set<String> getSupportedOptions()
+    Set<String> getSupportedAnnotationTypes()
+    SourceVersion getSupportedSourceVersion()
+    void init(ProcessingEnvironment processingEnv)
+    boolean process(Set<? extends TypeElement> annotations,RoundEnvironment roundEnv)
+    Iterable<? extends Completion> getCompletions(Element element,AnnotationMirror annotation,ExecutableElement member,String userText);
+}
+Processor ..> ProcessingEnvironment
+Processor ..> RoundEnvironment
+interface ProcessingEnvironment{
+    Map<String,String> getOptions()
+    Messager getMessager()
+    Filer getFiler()
+    Elements getElementUtils()
+    Types getTypeUtils()
+    SourceVersion getSourceVersion()
+    Locale getLocale()
+    default boolean isPreviewEnabled()
+}
+abstract class AbstractProcessor implements Processor {
+    - boolean initialized
+    # ProcessingEnvironment processingEnv
+
+    # abstract boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+}
+
+
+interface RoundEnvironment{
+    boolean processingOver()
+    boolean errorRaised()
+    Set<? extends Element> getRootElements()
+    Set<? extends Element> getElementsAnnotatedWith(TypeElement a)
+    Set<? extends Element> getElementsAnnotatedWithAny(TypeElement... annotations)
+    Set<? extends Element> getElementsAnnotatedWith(Class<? extends Annotation> a)
+    Set<? extends Element> getElementsAnnotatedWithAny(Set<Class<? extends Annotation>> annotations)
+}
+
+interface Elements{
+    TypeElement getTypeElement(CharSequence name)
+    Set<? extends TypeElement> getAllTypeElements(CharSequence name)
+    List<? extends Element> getAllMembers(TypeElement type)
+}
+
+interface Types{
+
+}
+@@enduml

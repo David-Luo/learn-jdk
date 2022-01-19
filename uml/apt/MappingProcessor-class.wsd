@@ -1,0 +1,29 @@
+@@startuml mp-class
+class Mapper extends GeneratedType{
+
+}
+
+abstract class GeneratedType extends ModelElement{
+
+}
+
+abstract class ModelElement extends FreeMarkerWritable{
+
+}
+
+abstract class FreeMarkerWritable implements Writable {
+
+}
+
+class FreeMarkerModelElementWriter 
+
+class MapperRenderingProcessor implements ModelElementProcessor{
+    - void writeToSourceFile(Filer filer, Mapper model, TypeElement originatingElement)
+    - void createSourceFile(GeneratedType model, ModelWriter modelWriter, Filer filer,TypeElement originatingElement) 
+
+}
+class ModelWriter{
+   + void writeModel(FileObject sourceFile, Writable model)
+}
+
+@@enduml

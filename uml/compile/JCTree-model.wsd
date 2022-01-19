@@ -1,0 +1,32 @@
+@@startuml JCTree-model
+
+abstract class JCTree implements Tree
+
+class JCCompilationUnit extends JCTree implements CompilationUnitTree 
+
+
+class JCClassDecl extends JCStatement implements ClassTree{
+    + JCModifiers mods;
+    /** the name of the class */
+    + Name name;
+    /** formal class parameters */
+    + List<JCTypeParameter> typarams;
+    /** the classes this class extends */
+    + JCExpression extending;
+    /** the interfaces implemented by this class */
+    + List<JCExpression> implementing;
+    /** all variables and methods defined in this class */
+    + List<JCTree> defs;
+    /** the symbol */
+    + ClassSymbol sym;
+}
+JCClassDecl ..> ClassSymbol
+class ClassSymbol extends TypeSymbol implements TypeElement
+
+interface TypeElement extends Element
+
+abstract class TypeSymbol extends Symbol
+interface ClassTree extends StatementTree
+interface StatementTree extends Tree
+abstract class JCStatement extends JCTree implements StatementTree
+@@enduml
