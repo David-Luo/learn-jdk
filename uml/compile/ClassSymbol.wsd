@@ -1,0 +1,10 @@
+@@startuml ClassSymbol
+interface TypeElement extends Element
+interface ExecutableElement extends Element
+class ClassSymbol extends TypeSymbol implements TypeElement
+class MethodSymbol extends Symbol implements ExecutableElement
+
+
+abstract class TypeSymbol extends Symbol
+
+@@enduml

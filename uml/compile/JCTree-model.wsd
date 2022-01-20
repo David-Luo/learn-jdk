@@ -1,6 +1,15 @@
 @@startuml JCTree-model
+hide members
+skinparam backgroundcolor black
+skinparam classBackgroundColor gray
+skinparam ClassBorderColor white
+skinparam ClassFontColor white
 
-abstract class JCTree implements Tree
+abstract class JCTree implements Tree, Cloneable
+
+interface StatementTree extends Tree
+abstract class JCStatement extends JCTree implements StatementTree
+abstract class JCExpression extends JCTree implements ExpressionTree
 
 class JCCompilationUnit extends JCTree implements CompilationUnitTree 
 
@@ -20,13 +29,12 @@ class JCClassDecl extends JCStatement implements ClassTree{
     /** the symbol */
     + ClassSymbol sym;
 }
-JCClassDecl ..> ClassSymbol
-class ClassSymbol extends TypeSymbol implements TypeElement
 
-interface TypeElement extends Element
-
-abstract class TypeSymbol extends Symbol
 interface ClassTree extends StatementTree
-interface StatementTree extends Tree
-abstract class JCStatement extends JCTree implements StatementTree
+
+class JCAssign extends JCExpression
+class JCIdent extends JCExpression
+class JCBlock extends JCStatement
+
+
 @@enduml

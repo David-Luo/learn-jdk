@@ -53,3 +53,24 @@ l Infer：类参数引用的类。
 这是最终的阶段。这个阶段生成许多源文件或者类文件。到底是生成源文件还是类文件取决于编译选项。
 
 由com.sun.tools.javac.jvm.ClassWriter实现.
+
+
+
+
+# 抽象语法树
+一个标准的.java文件解析后JCTree的结构如下:
+
+- JCCompilationUnit: 编译单位,即一个源代码文件
+  - JCPackageDecl: 包声明
+  - JCImport: 包导入声明
+  - JCClassDecl: 类声明
+    - JCVariableDecl: 类成员变量
+    - JCMethodDecl: 方法声明
+      - JCModifiers: 方法描述
+        - JCAnnotation: 方法注解
+      - JCVariableDecl: 方法参数
+
+
+com.sun.source.tree
+com.sun.tools.javac.tree
+
