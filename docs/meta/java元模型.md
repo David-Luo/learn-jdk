@@ -32,6 +32,11 @@ Java模型包结构
 ![ElementFilter](../imgs/uml/ElementFilter.png)
 ![ElementVisitor](../imgs/uml/ElementVisitor.png)
 ![TypeVisitor](../imgs/uml/TypeVisitor.png)
+![Trees](../imgs/uml/Trees.png)
+![JavaFileManager](../imgs/uml/JavaFileManager.png)
+![JavacFiler](../imgs/uml/JavacFiler.png)
+
+
 
 # 工具使用案例
 ```java
