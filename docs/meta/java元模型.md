@@ -27,7 +27,7 @@ Java模型包结构
 当在注释处理的上下文中使用时，必须返回所表示的元素的准确模型。 由于这是一种语言模型，源代码提供了所讨论的构造的基准（参考）表示，而不是类似于类文件的可执行输出中的表示。 可执行输出可以作为创建建模元素的基础。 但是，将源代码转换为可执行输出的过程可能不允许恢复源代码表示的某些方面。 例如，无法从类文件中恢复source retention的注释，并且类文件可能无法提供源位置信息。
 
 # 模型相关工具
-![types](../imgs/uml/types.png)
+![types](../imgs/uml/Types.png)
 ![Elements](../imgs/uml/Elements.png)
 ![ElementFilter](../imgs/uml/ElementFilter.png)
 ![ElementVisitor](../imgs/uml/ElementVisitor.png)
